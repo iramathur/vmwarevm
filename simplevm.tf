@@ -16,69 +16,31 @@ data "vsphere_datastore" "datastore" {
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
-data "vsphere_resource_pool" "pool2" {
-  name          = "cerberus/Resources"
- datacenter_id = "${data.vsphere_datacenter.dc.id}"
-}
-
-data "vsphere_resource_pool" "pool" {
+data "vsphere_compute_cluster" "cluster" {
   name          = "fenrir/Resources"
- datacenter_id = "${data.vsphere_datacenter.dc.id}"
+  datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
-data "vsphere_virtual_machine" "template" {
-  name          = "ubuntu16"
-  datacenter_id = "${data.vsphere_datacenter.dc.id}"
-}
-data "vsphere_network" "network2" {
-  name          = "portGroup-1006"
-  datacenter_id = "${data.vsphere_datacenter.dc.id}"
-}
 data "vsphere_network" "network" {
   name          = "portGroup-1004"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
 resource "vsphere_virtual_machine" "vm" {
-  name             = "test-checking-tests-vm-code"
-  resource_pool_id = "${data.vsphere_resource_pool.pool.id}"
+  name             = "terraform-test"
+  resource_pool_id = "${data.vsphere_compute_cluster.cluster.resource_pool_id}"
   datastore_id     = "${data.vsphere_datastore.datastore.id}"
 
-  num_cpus = 1
-  memory   = 512
-  guest_id = "${data.vsphere_virtual_machine.template.guest_id}"
+  num_cpus = 2
+  memory   = 1024
+  guest_id = "other3xLinux64Guest"
 
   network_interface {
     network_id = "${data.vsphere_network.network.id}"
   }
-  network_interface {
-    network_id = "${data.vsphere_network.network2.id}"
-  }
-
-wait_for_guest_net_timeout = 0
 
   disk {
     label = "disk0"
-    size  = 4
-  }
-}         
-resource "vsphere_virtual_machine" "vm2" {
-  name             = "test-creatingsvm2"
- resource_pool_id = "${data.vsphere_resource_pool.pool2.id}"
-  datastore_id     = "${data.vsphere_datastore.datastore.id}"
-
-  num_cpus = 1
-  memory   = 512 
-  guest_id = "windows7_64Guest"
-
-  network_interface { 
-    network_id = "${data.vsphere_network.network.id}" 
-  } 
-    
-wait_for_guest_net_timeout = 0
-    
-  disk {
-    label = "disk0"
-    size  = 4
+    size  = 20
   }
 }
