@@ -33,7 +33,7 @@ resource "vsphere_virtual_machine" "vm" {
 
   num_cpus = 2
   memory   = 1024
-  guest_id = "centos7"
+  guest_id = "centos7Guest"
 
   network_interface {
     network_id = "${data.vsphere_network.network.id}"
