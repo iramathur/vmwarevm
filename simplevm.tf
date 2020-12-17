@@ -16,9 +16,9 @@ data "vsphere_datastore" "datastore" {
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
-data "vsphere_compute_cluster" "cluster" {
+data "vsphere_resource_pool" "pool" {
   name          = "fenrir/Resources"
-  datacenter_id = "${data.vsphere_datacenter.dc.id}"
+ datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
 data "vsphere_network" "network" {
@@ -28,7 +28,7 @@ data "vsphere_network" "network" {
 
 resource "vsphere_virtual_machine" "vm" {
   name             = "terraform-test"
-  resource_pool_id = "${data.vsphere_compute_cluster.cluster.resource_pool_id}"
+  resource_pool_id     = "${data.vsphere_resource_pool.pool.id}"
   datastore_id     = "${data.vsphere_datastore.datastore.id}"
 
   num_cpus = 2
