@@ -1,42 +1,26 @@
-provider "vsphere" {  
-  user           = "cmpqa.svc@itomcmp.servicenow.com"
-  password       = "snc!23$"
-  vsphere_server = "10.198.1.13"
-
-  # If you have a self-signed cert
-  allow_unverified_ssl = true
-}
-
 data "vsphere_datacenter" "dc" {
-  name = "devcloud"
+  name = "dc1"
 }
 
 data "vsphere_datastore" "datastore" {
-  name          = "vmstore"
+  name          = "datastore1"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
-data "vsphere_resource_pool" "pool" {
-  name          = "fenrir/Resources"
- datacenter_id = "${data.vsphere_datacenter.dc.id}"
+data "vsphere_compute_cluster" "cluster" {
+  name          = "cluster1"
+  datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
 data "vsphere_network" "network" {
-  name          = "portGroup-1004"
-  datacenter_id = "${data.vsphere_datacenter.dc.id}"
-}
-
-# Retrieve template information on vsphere
-data "vsphere_virtual_machine" "template" {
-  name          = "centos7_64Guest"
+  name          = "public"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
 resource "vsphere_virtual_machine" "vm" {
   name             = "terraform-test"
-  resource_pool_id     = "${data.vsphere_resource_pool.pool.id}"
+  resource_pool_id = "${data.vsphere_compute_cluster.cluster.resource_pool_id}"
   datastore_id     = "${data.vsphere_datastore.datastore.id}"
-  wait_for_guest_net_timeout = -1
 
   num_cpus = 2
   memory   = 1024
