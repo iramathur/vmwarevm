@@ -26,6 +26,7 @@ data "vsphere_network" "network" {
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
+# Retrieve template information on vsphere
 data "vsphere_virtual_machine" "template" {
   name          = "centos7_64Guest"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
@@ -48,21 +49,5 @@ resource "vsphere_virtual_machine" "vm" {
   disk {
     label = "disk0"
     size  = 20
-  }
-
-   clone {
-    template_uuid = data.vsphere_virtual_machine.template.id
-
-    customize {
-      linux_options {
-        host_name = "vm-one"
-        domain    = "test.internal"
-      }
-
-      network_interface {
-      }
-
-      ipv4_gateway = "10.198.4.1"
-    }
   }
 }
