@@ -6,10 +6,21 @@ provider "vsphere" {
   # If you have a self-signed cert
   allow_unverified_ssl = true
 }
+resource "random_id" "server" {
+  byte_length = 8
+}
+
 
 data "vsphere_datacenter" "dc" {
   name = "devcloud"
 }
+
+resource "vsphere_folder" "foldervm" {
+  path          = "terrtar-testng${random_id.server.hex}"
+  type          = "vm"
+  datacenter_id = "${data.vsphere_datacenter.dc.id}"
+}
+
 
 data "vsphere_datastore" "datastore" {
   name          = "vmstore"
@@ -21,29 +32,40 @@ data "vsphere_resource_pool" "pool" {
  datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
+data "vsphere_virtual_machine" "template" {
+  name          = "ubuntu16"
+  datacenter_id = "${data.vsphere_datacenter.dc.id}"
+}
+data "vsphere_tag_category" "category" {
+  name = "Dev_lab"
+}
+data "vsphere_tag" "tag" {
+  name        = "Dev_app"
+  category_id = "${data.vsphere_tag_category.category.id}"
+}
 data "vsphere_network" "network" {
   name          = "portGroup-1004"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
 resource "vsphere_virtual_machine" "vm" {
-  name             = "terraform-test"
-  resource_pool_id     = "${data.vsphere_resource_pool.pool.id}"
+  name             = "trial-vm${random_id.server.hex}"
+  resource_pool_id = "${data.vsphere_resource_pool.pool.id}"
   datastore_id     = "${data.vsphere_datastore.datastore.id}"
-  wait_for_guest_net_timeout = -1
-  folder = "dev_zone"
-
-
-  num_cpus = 2
-  memory   = 1024
-  guest_id = "centos7_64Guest"
+  folder = "${vsphere_folder.foldervm.path}"
+  tags = ["${data.vsphere_tag.tag.id}"]
+  num_cpus = 1
+  memory   = 512
+  guest_id = "centos64Guest"
 
   network_interface {
     network_id = "${data.vsphere_network.network.id}"
   }
 
+  wait_for_guest_net_timeout = 0
+
   disk {
     label = "disk0"
-    size  = 20
+    size  = 4
   }
 }
