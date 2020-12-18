@@ -10,7 +10,7 @@ data "vsphere_datacenter" "dc" {
   name = "qacavern"
 }
 data "vsphere_resource_pool" "pool" {
-  name          = "sekhmet/Resources"
+  name          = "anubis/Resources"
  datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 # Retrieve datastore information on vsphere
@@ -20,7 +20,7 @@ data "vsphere_datastore" "datastore" {
 }
 # Retrieve network information on vsphere
 data "vsphere_network" "network" {
-  name          = "portGroup-1008"
+  name          = "portGroup-1004"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 # Retrieve template information on vsphere
