@@ -7,20 +7,20 @@ provider "vsphere" {
 }
 #### RETRIEVE DATA INFORMATION ON VCENTER ####
 data "vsphere_datacenter" "dc" {
-  name = "devcloud"
+  name = "qacavern"
 }
 data "vsphere_resource_pool" "pool" {
-  name          = "fenrir/Resources"
+  name          = "sekhmet/Resources"
  datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 # Retrieve datastore information on vsphere
 data "vsphere_datastore" "datastore" {
-  name          = "ds411"
+  name          = "vmstore"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 # Retrieve network information on vsphere
 data "vsphere_network" "network" {
-  name          = "portGroup-1006"
+  name          = "portGroup-1008"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 # Retrieve template information on vsphere
