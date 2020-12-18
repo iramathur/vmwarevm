@@ -8,21 +8,21 @@ provider "vsphere" {
 }
 
 data "vsphere_datacenter" "dc" {
-  name = "dc1"
+  name = "devcloud"
 }
 
 data "vsphere_datastore" "datastore" {
-  name          = "datastore1"
+  name          = "vmstore"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
 data "vsphere_compute_cluster" "cluster" {
-  name          = "cluster1"
+  name          = "fenrir/Resources"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
 data "vsphere_network" "network" {
-  name          = "public"
+  name          = "portGroup-1004"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 
