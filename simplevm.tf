@@ -15,12 +15,12 @@ data "vsphere_resource_pool" "pool" {
 }
 # Retrieve datastore information on vsphere
 data "vsphere_datastore" "datastore" {
-  name          = "vmstore"
+  name          = "ds411"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 # Retrieve network information on vsphere
 data "vsphere_network" "network" {
-  name          = "portGroup-1004"
+  name          = "portGroup-1006"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 # Retrieve template information on vsphere
