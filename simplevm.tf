@@ -7,10 +7,10 @@ provider "vsphere" {
 }
 #### RETRIEVE DATA INFORMATION ON VCENTER ####
 data "vsphere_datacenter" "dc" {
-  name = "qacavern"
+  name = "devcloud"
 }
 data "vsphere_resource_pool" "pool" {
-  name          = "anubis/Resources"
+  name          = "fenrir/Resources"
  datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 # Retrieve datastore information on vsphere
@@ -39,7 +39,6 @@ resource "vsphere_virtual_machine" "vm-one" {
   resource_pool_id     = "${data.vsphere_resource_pool.pool.id}"
   guest_id             = "${data.vsphere_virtual_machine.template.guest_id}"
   scsi_type            = "${data.vsphere_virtual_machine.template.scsi_type}"
-  folder = "vm_zone"
   # Set network parameters
   network_interface {
     network_id         = "${data.vsphere_network.network.id}"
