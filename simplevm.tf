@@ -49,7 +49,7 @@ resource "vsphere_virtual_machine" "vm-one" {
   memory           = 4096
   datastore_id     = data.vsphere_datastore.datastore.id
   resource_pool_id = data.vsphere_resource_pool.pool.id
-  guest_id         = data.vsphere_virtual_machine.template.guest_id
+  guest_id         = "centos7_64Guest"
   scsi_type        = data.vsphere_virtual_machine.template.scsi_type
 
   # Set network parameters
