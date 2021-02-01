@@ -1,7 +1,7 @@
 provider "vsphere" {
-  user           = "cmpqa.svc@itomcmp.servicenow.com"
-  password       = "snc!23$"
-  vsphere_server = "10.198.1.13"
+  user           = "${var.user_name}"
+  password       = "${var.password}"
+  vsphere_server = "${var.server}"
   version = "< 1.16.0"
   # If you have a self-signed cert
   allow_unverified_ssl = true
@@ -58,12 +58,7 @@ resource "vsphere_virtual_machine" "vm-one" {
         host_name = "vm-two"
         domain    = "test.internal"
       }
-      network_interface {
-        ipv4_address    = "10.198.4.157"
-        ipv4_netmask    = 24
-        dns_server_list = ["10.198.4.10"]
-      }
-      ipv4_gateway = "10.198.4.1"
+     
     }
   }
 }
